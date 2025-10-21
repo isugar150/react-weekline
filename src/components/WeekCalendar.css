@@ -10,9 +10,9 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  width: 100%;
   font-family: ui-sans-serif, -apple-system, Segoe UI, Roboto, 'Noto Sans KR', Apple SD Gothic Neo, 'Malgun Gothic', Arial, sans-serif;
   color: var(--wk-text);
-  width: 100%;
 }
 
 .wk-header {
