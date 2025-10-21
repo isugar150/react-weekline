@@ -1,29 +1,31 @@
-﻿import type { JSX } from 'react';
-import './App.css';
-import WeekCalendar from './components/WeekCalendar';
+﻿import { useMemo, type JSX } from "react";
+import "./App.css";
+import WeekCalendar from "./components/WeekCalendar";
+import sampleData from "./assets/data.json";
+import { customEmpty as customEmptyRenderer } from "./empty";
 
-interface EventItem { id: string; title: string; time?: string }
-
-function stripTime(d: Date): Date {
-  return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+interface EventItem {
+  id: string | number;
+  time: string; // YYYY-MM-DD HH:mm:ss
+  title: string;
+  content: string;
+  photo: string;
+  labelColor: string;
+  labelName: string;
+  tags?: string[];
 }
 
-function daysBetween(a: Date, b: Date): number {
-  const msPerDay = 24 * 60 * 60 * 1000;
-  return Math.round((stripTime(a).getTime() - stripTime(b).getTime()) / msPerDay);
+function parseLocalDateTime(text: string): Date {
+  const [datePart, timePart = "00:00:00"] = text.split(" ");
+  const [y, m, d] = datePart.split("-").map((n) => parseInt(n, 10));
+  const [hh, mm, ss = "0"] = timePart.split(":");
+  return new Date(y, (m || 1) - 1, d || 1, parseInt(hh || "0", 10), parseInt(mm || "0", 10), parseInt(ss || "0", 10));
 }
 
 function EmptyState(): JSX.Element {
   return (
-    <div style={{ display: 'grid', placeItems: 'center', padding: 16, color: '#6b7280' }}>
-      <div style={{ display: 'grid', placeItems: 'center', gap: 8 }}>
-        <svg width="38" height="38" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path d="M12 2l7 4-7 4-7-4 7-4z" stroke="#94a3b8" strokeWidth="1.5" fill="#e5e7eb"/>
-          <path d="M19 6v8l-7 4-7-4V6" stroke="#94a3b8" strokeWidth="1.5" fill="#f1f5f9"/>
-          <path d="M12 10v8" stroke="#94a3b8" strokeWidth="1.5"/>
-        </svg>
-        <div style={{ fontSize: 14 }}>표시할 컨텐츠가 없습니다</div>
-      </div>
+    <div style={{ display: "grid", placeItems: "center", padding: 16, color: "#6b7280", border: "1px dashed #e6e8ef", borderRadius: 8 }}>
+      <div style={{ display: "grid", placeItems: "center", gap: 8 }}>No content</div>
     </div>
   );
 }
@@ -34,88 +36,115 @@ function EventItemView({ item, onClick }: { item: EventItem; onClick: (it: Event
       type="button"
       onClick={() => onClick(item)}
       style={{
-        width: '100%',
-        textAlign: 'left',
-        border: '1px solid #e6e8ef',
+        width: "100%",
+        textAlign: "left",
+        border: "1px solid #e6e8ef",
         borderRadius: 8,
-        padding: '8px 10px',
-        background: '#fff',
-        display: 'flex',
-        alignItems: 'center',
-        gap: 8,
-        cursor: 'pointer',
+        padding: 8,
+        background: "#fff",
+        display: "flex",
+        alignItems: "stretch",
+        gap: 10,
+        cursor: "pointer",
       }}
     >
-      <span aria-hidden style={{ width: 6, height: 6, borderRadius: 9999, background: '#6366f1' }} />
-      {item.time && <span style={{ fontSize: 12, color: '#6b7280', minWidth: 44 }}>{item.time}</span>}
-      <span style={{ fontSize: 14, color: '#2b2f38' }}>{item.title}</span>
+      <span aria-hidden style={{ width: 6, alignSelf: "stretch", borderRadius: 4, background: item.labelColor }} />
+
+      <img
+        src={item.photo}
+        alt={item.title}
+        style={{
+          width: 64,
+          height: 64,
+          borderRadius: 6,
+          objectFit: "cover",
+          flex: "0 0 auto",
+          background: "#f3f4f6",
+        }}
+      />
+
+      <div style={{ display: "flex", flexDirection: "column", gap: 6, minWidth: 0, flex: 1 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
+          <span style={{ fontSize: 14, color: "#111827", fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+            {item.title}
+          </span>
+          <span
+            style={{
+              fontSize: 11,
+              color: "#1f2937",
+              background: "#f3f4f6",
+              border: "1px solid #e5e7eb",
+              padding: "2px 6px",
+              borderRadius: 999,
+              lineHeight: 1.2,
+            }}
+          >
+            {item.labelName}
+          </span>
+          {item.tags?.map((t) => (
+            <span
+              key={t}
+              style={{
+                fontSize: 11,
+                color: "#374151",
+                background: "#eef2ff",
+                border: "1px solid #e0e7ff",
+                padding: "2px 6px",
+                borderRadius: 999,
+                lineHeight: 1.2,
+              }}
+            >
+              {t}
+            </span>
+          ))}
+        </div>
+
+        <div style={{ fontSize: 12, color: "#4b5563", lineHeight: 1.4, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+          {item.content}
+        </div>
+      </div>
     </button>
   );
 }
 
 function App(): JSX.Element {
-  const handleEventClick = (it: EventItem, date: Date) => {
-    console.log('event click:', it, date.toISOString());
-  };
+  const startOfWeek = "sun" as const;
 
-  const handleWeekChange = (start: Date, end: Date) => {
-    console.log('week change:', start.toDateString(), '→', end.toDateString());
+  const handleEventClick = (it: EventItem, date: Date) => {
+    console.log("event click:", it, date.toISOString());
   };
 
   const handleDateClick = (date: Date) => {
-    console.log('date click:', date.toDateString());
+    console.log("date click:", date.toDateString());
   };
 
-  const today = new Date();
+  const data: EventItem[] = useMemo(() => {
+    return (sampleData as unknown as EventItem[]).map((it) => ({ ...it }));
+  }, []);
 
   return (
-    <div style={{ maxWidth: 860, margin: '24px auto', padding: '0 16px' }}>
+    <div style={{ maxWidth: 860, margin: "24px auto", padding: "0 16px" }}>
       <WeekCalendar
-        startOfWeek="sun"
-        leftHeader={<div>왼쪽 커스텀</div>}
-        rightHeader={<button style={{ padding: '6px 10px' }}>오른쪽 버튼</button>}
-        onWeekChange={handleWeekChange}
+        initialDate={new Date(2025, 9, 21)}
+        startOfWeek={startOfWeek}
+        leftHeader={<div>Left</div>}
+        rightHeader={<button style={{ padding: "6px 10px" }}>Right</button>}
         onDateClick={handleDateClick}
         renderDayContent={(date: Date) => {
-          const diff = daysBetween(date, today); // 양수: date가 과거, 음수: 미래
-          let items: EventItem[] = [];
+          const winEmpty: undefined | ((d: Date) => JSX.Element) = (globalThis as any)?.weeklineEmpty;
+          const renderEmpty = (customEmptyRenderer ?? winEmpty ?? (() => <EmptyState />)) as (d: Date) => JSX.Element;
+          const y = date.getFullYear();
+          const m = date.getMonth();
+          const d = date.getDate();
 
-          // 규칙
-          // 어제: 2개, 오늘: 1개, 2일 뒤: 3개
-          if (diff === 1) {
-            items = [
-              { id: 'y-1', title: '어제 업무 정리', time: '10:00' },
-              { id: 'y-2', title: '어제 미팅 회의록', time: '16:00' },
-            ];
-          } else if (diff === 0) {
-            items = [{ id: 't-1', title: '오늘 일정 확인', time: '09:30' }];
-          } else if (diff === -2) {
-            items = [
-              { id: 'd2-1', title: '디자인 리뷰', time: '09:30' },
-              { id: 'd2-2', title: '개발 스탠드업', time: '13:00' },
-              { id: 'd2-3', title: 'QA 체크', time: '16:30' },
-            ];
-          }
+          const items: EventItem[] = data.filter((it) => {
+            const t = parseLocalDateTime(it.time);
+            return t.getFullYear() === y && t.getMonth() === m && t.getDate() === d;
+          });
 
-          // 다음 주: 없거나(0) / 1개 / 2개
-          // 기준: 오늘로부터 7~13일 사이
-          if (diff <= -7 && diff >= -13) {
-            const mod3 = Math.abs(diff) % 3;
-            if (mod3 === 0) {
-              items = [];
-            } else if (mod3 === 1) {
-              items = [{ id: `n1-${diff}`, title: '다음주 일정(임시)', time: '11:00' }];
-            } else {
-              items = [
-                { id: `n2-${diff}-a`, title: '다음주 미팅', time: '10:30' },
-                { id: `n2-${diff}-b`, title: '다음주 작업', time: '15:00' },
-              ];
-            }
-          }
-
-          if (items.length === 0) return <EmptyState />;
+          if (items.length === 0) return renderEmpty(date);
           return (
-            <div style={{ display: 'grid', gap: 8 }}>
+            <div style={{ display: "grid", gap: 8 }}>
               {items.map((it) => (
                 <EventItemView key={it.id} item={it} onClick={(e) => handleEventClick(e, date)} />
               ))}

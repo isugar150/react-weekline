@@ -1,0 +1,22 @@
+﻿[
+  {"id":1,"time":"2025-10-10 17:40:00","title":"보안 점검","content":"토큰 만료/갱신 로직 확인","photo":"https://picsum.photos/200?110","labelColor":"#607D8B","labelName":"보안"},
+  {"id":2,"time":"2025-10-12 14:30:00","title":"광고 리포트","content":"9월 성과 보고서 발송","photo":"https://picsum.photos/200?102","labelColor":"#2196F3","labelName":"리포트","tags":["마케팅"]},
+  {"id":3,"time":"2025-10-13 11:00:00","title":"기획 리뷰","content":"신규 타겟팅 액션 회의","photo":"https://picsum.photos/200?103","labelColor":"#FF9800","labelName":"회의"},
+  {"id":4,"time":"2025-10-14 10:00:00","title":"디자인 협의","content":"캠페인 배너 최종 확정","photo":"https://picsum.photos/200?104","labelColor":"#9C27B0","labelName":"디자인"},
+  {"id":5,"time":"2025-10-15 16:00:00","title":"CS 처리","content":"고객 문의 연락 및 처리","photo":"https://picsum.photos/200?105","labelColor":"#E91E63","labelName":"지원"},
+  {"id":6,"time":"2025-10-16 09:30:00","title":"주간 스탠드업","content":"팀 진행 상황 공유","photo":"https://picsum.photos/200?106","labelColor":"#03A9F4","labelName":"스크럼"},
+  {"id":7,"time":"2025-10-17 15:00:00","title":"코드 리뷰","content":"광고 API 기능 PR 검토","photo":"https://picsum.photos/200?107","labelColor":"#795548","labelName":"개발","tags":["PR"]},
+  {"id":8,"time":"2025-10-18 13:20:00","title":"파트너 미팅","content":"공동 프로모션 일정 조율","photo":"https://picsum.photos/200?108","labelColor":"#009688","labelName":"미팅"},
+  {"id":9,"time":"2025-10-19 10:30:00","title":"A/B 실험 설계","content":"랜딩 개선 실험 안 정리","photo":"https://picsum.photos/200?109","labelColor":"#FF5722","labelName":"실험"},
+  {"id":10,"time":"2025-10-11 09:10:00","title":"분기 목표 공유","content":"3분기 목표 및 성과 공유","photo":"https://picsum.photos/200?101","labelColor":"#4CAF50","labelName":"업무","tags":["OKR","공지"]},
+  {"id":11,"time":"2025-10-12 09:00:00","title":"캐시 최적화","content":"캐시 전략 재검토 및 적용","photo":"https://picsum.photos/200?112","labelColor":"#FFC107","labelName":"성능"},
+  {"id":12,"time":"2025-10-13 14:20:00","title":"데이터 동기화","content":"ETL 스케줄 점검","photo":"https://picsum.photos/200?113","labelColor":"#8BC34A","labelName":"데이터"},
+  {"id":13,"time":"2025-10-14 11:30:00","title":"모바일 QA","content":"RN 빌드 설정 점검","photo":"https://picsum.photos/200?114","labelColor":"#8BC34A","labelName":"QA"},
+  {"id":14,"time":"2025-10-16 11:45:00","title":"DB 최적화","content":"인덱스/쿼리 플랜 검토","photo":"https://picsum.photos/200?116","labelColor":"#9E9E9E","labelName":"DB"},
+  {"id":15,"time":"2025-10-18 15:30:00","title":"UI 정리","content":"컬러/타이포 개선 반영","photo":"https://picsum.photos/200?118","labelColor":"#673AB7","labelName":"UI"},
+  {"id":16,"time":"2025-10-21 10:00:00","title":"분기 리소스 배분","content":"채용/외주/우선순위 조정","photo":"https://picsum.photos/200?120","labelColor":"#CDDC39","labelName":"운영"},
+  {"id":17,"time":"2025-10-22 09:50:00","title":"캠페인 론치","content":"모니터링/롤백 플랜 확인","photo":"https://picsum.photos/200?122","labelColor":"#00BCD4","labelName":"런칭"},
+  {"id":18,"time":"2025-10-24 18:10:00","title":"회고","content":"릴리즈 이슈/개선거리 정리","photo":"https://picsum.photos/200?124","labelColor":"#F44336","labelName":"회고"},
+  {"id":19,"time":"2025-10-27 16:00:00","title":"고객 인터뷰","content":"관리자 UX 확인/의견 수집","photo":"https://picsum.photos/200?127","labelColor":"#3F51B5","labelName":"리서치"},
+  {"id":20,"time":"2025-10-29 13:00:00","title":"백로그 그루밍","content":"Q4 핵심 이슈 정렬","photo":"https://picsum.photos/200?129","labelColor":"#9C27B0","labelName":"스프린트"}
+]

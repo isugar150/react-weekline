@@ -1,4 +1,4 @@
-﻿import { useEffect, useMemo, useState, type ReactNode } from 'react';
+﻿import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import './WeekCalendar.css';
 
 export type WeekStart = 'sun' | 'mon';
@@ -93,10 +93,13 @@ export default function WeekCalendar({
   // precompute weekEnd to keep effect deps simple
   const weekEnd = useMemo(() => addDays(weekStart, 6), [weekStart]);
 
-  // notify week change
+  const onWeekChangeRef = useRef(onWeekChange);
+  useEffect(() => { onWeekChangeRef.current = onWeekChange; }, [onWeekChange]);
+
+  // notify week change once range changes
   useEffect(() => {
-    onWeekChange?.(weekStart, weekEnd);
-  }, [weekStart, weekEnd, onWeekChange]);
+    onWeekChangeRef.current?.(weekStart, weekEnd);
+  }, [weekStart, weekEnd]);
 
   const onPrev = () => setAnchorDate(addDays(anchorDate, -7));
   const onNext = () => setAnchorDate(addDays(anchorDate, 7));
@@ -159,6 +162,14 @@ export default function WeekCalendar({
     </div>
   );
 }
+
+
+
+
+
+
+
+
 
 
 
