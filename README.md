@@ -1,4 +1,12 @@
-﻿## react-weekline
+# react-weekline
+
+[![npm version](https://img.shields.io/npm/v/react-weekline.svg?style=flat-square&color=blue)](https://www.npmjs.com/package/react-weekline)
+[![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg?style=flat-square)](https://opensource.org/licenses/ISC)
+[![Built with React](https://img.shields.io/badge/built%20with-React-61DAFB.svg?style=flat-square&logo=react&logoColor=white)]()
+[![TypeScript](https://img.shields.io/badge/typescript-007ACC?style=flat-square&logo=typescript&logoColor=white)]()
+
+ 
+ ## react-weekline
 
 Lightweight, flexible weekly calendar component for React. Renders a 7‑day list view with headers, day labels, and per‑day custom content.
 
