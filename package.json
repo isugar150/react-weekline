@@ -1,6 +1,6 @@
 {
     "name":  "react-weekline",
-    "version":  "0.1.0",
+    "version":  "0.1.1",
     "private":  false,
     "type":  "module",
     "scripts":  {
@@ -49,3 +49,4 @@
                             "vite-plugin-dts":  "^4.3.0"
                         }
 }
+

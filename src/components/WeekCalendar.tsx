@@ -1,4 +1,4 @@
-﻿import { useMemo, useState, type ReactNode } from 'react';
+﻿import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import './WeekCalendar.css';
 
 export type WeekStart = 'sun' | 'mon';
@@ -9,6 +9,8 @@ export type WeekCalendarProps = {
   initialDate?: Date; // anchor date for the week
   renderDayContent?: (date: Date) => ReactNode;
   startOfWeek?: WeekStart; // 'sun' | 'mon' (default: 'sun')
+  onWeekChange?: (start: Date, end: Date) => void;
+  onDateClick?: (date: Date) => void;
 };
 
 // Helpers
@@ -71,6 +73,8 @@ export default function WeekCalendar({
   initialDate,
   renderDayContent,
   startOfWeek = 'sun',
+  onWeekChange,
+  onDateClick,
 }: WeekCalendarProps) {
   const today = useMemo(() => new Date(), []);
   const [anchorDate, setAnchorDate] = useState<Date>(initialDate ? new Date(initialDate) : today);
@@ -85,6 +89,14 @@ export default function WeekCalendar({
   // Choose display month using the middle day of the week to avoid week-spanning ambiguity
   const midOfWeek = weekDays[3];
   const ym = formatYearMonth(midOfWeek);
+
+  // precompute weekEnd to keep effect deps simple
+  const weekEnd = useMemo(() => addDays(weekStart, 6), [weekStart]);
+
+  // notify week change
+  useEffect(() => {
+    onWeekChange?.(weekStart, weekEnd);
+  }, [weekStart, weekEnd, onWeekChange]);
 
   const onPrev = () => setAnchorDate(addDays(anchorDate, -7));
   const onNext = () => setAnchorDate(addDays(anchorDate, 7));
@@ -117,7 +129,15 @@ export default function WeekCalendar({
           return (
             <div key={label} className={classes}>
               <div className="wk-weekbar-label">{label}</div>
-              <div className={dateClasses}>{weekDays[idx].getDate()}</div>
+              <div
+                className={dateClasses + (onDateClick ? ' wk-clickable' : '')}
+                onClick={() => onDateClick?.(weekDays[idx])}
+                role="button"
+                tabIndex={0}
+                aria-label="날짜 선택"
+              >
+                {weekDays[idx].getDate()}
+              </div>
             </div>
           );
         })}
@@ -126,7 +146,7 @@ export default function WeekCalendar({
       <div className="wk-weeklist">
         {weekDays.map((d) => (
           <div key={d.toISOString()} className="wk-weeklist-row">
-            <div className="wk-weeklist-date-row">
+            <div className="wk-weeklist-date-row" onClick={() => onDateClick?.(d)}>
               <div className="wk-weeklist-date-text">{formatFull(d)}</div>
               <div className="wk-divider" aria-hidden="true"></div>
             </div>
@@ -139,4 +159,7 @@ export default function WeekCalendar({
     </div>
   );
 }
+
+
+
 

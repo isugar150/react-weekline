@@ -132,3 +132,7 @@
 .wk-weeklist-date-row { display: flex; align-items: center; gap: 8px; }
 .wk-weeklist-date-text { font-size: 14px; color: var(--wk-text); white-space: nowrap; }
 .wk-divider { flex: 1 1 auto; height: 1px; background: var(--wk-border); }
+/* Clickable helpers */
+.wk-clickable { cursor: pointer; }
+.wk-weekbar-date.wk-clickable:hover { filter: brightness(0.98); }
+
