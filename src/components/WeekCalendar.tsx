@@ -11,6 +11,7 @@ export type WeekCalendarProps = {
   startOfWeek?: WeekStart; // 'sun' | 'mon' (default: 'sun')
   onWeekChange?: (start: Date, end: Date) => void;
   onDateClick?: (date: Date) => void;
+  showEmptyDays?: boolean; // when false, hide rows where renderDayContent returns null/undefined
 };
 
 // Helpers
@@ -75,6 +76,7 @@ export default function WeekCalendar({
   startOfWeek = 'sun',
   onWeekChange,
   onDateClick,
+  showEmptyDays = true,
 }: WeekCalendarProps) {
   const today = useMemo(() => new Date(), []);
   const [anchorDate, setAnchorDate] = useState<Date>(initialDate ? new Date(initialDate) : today);
@@ -147,30 +149,22 @@ export default function WeekCalendar({
       </div>
 
       <div className="wk-weeklist">
-        {weekDays.map((d) => (
-          <div key={d.toISOString()} className="wk-weeklist-row">
-            <div className="wk-weeklist-date-row" onClick={() => onDateClick?.(d)}>
-              <div className="wk-weeklist-date-text">{formatFull(d)}</div>
-              <div className="wk-divider" aria-hidden="true"></div>
+        {weekDays.map((d) => {
+          const content = renderDayContent ? renderDayContent(d) : <div>렌더링할 html 코드</div>;
+          if (!showEmptyDays && renderDayContent && (content === null || content === undefined)) {
+            return null;
+          }
+          return (
+            <div key={d.toISOString()} className="wk-weeklist-row">
+              <div className="wk-weeklist-date-row" onClick={() => onDateClick?.(d)}>
+                <div className="wk-weeklist-date-text">{formatFull(d)}</div>
+                <div className="wk-divider" aria-hidden="true"></div>
+              </div>
+              <div className="wk-weeklist-content">{content ?? null}</div>
             </div>
-            <div className="wk-weeklist-content">
-              {renderDayContent ? renderDayContent(d) : <div>렌더링할 html 코드</div>}
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-

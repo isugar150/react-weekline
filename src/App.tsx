@@ -109,6 +109,7 @@ function EventItemView({ item, onClick }: { item: EventItem; onClick: (it: Event
 
 function App(): JSX.Element {
   const startOfWeek = "sun" as const;
+  const showEmptyDays = false;
 
   const handleEventClick = (it: EventItem, date: Date) => {
     console.log("event click:", it, date.toISOString());
@@ -125,10 +126,11 @@ function App(): JSX.Element {
   return (
     <div style={{ maxWidth: 860, margin: "24px auto", padding: "0 16px" }}>
       <WeekCalendar
+        showEmptyDays={showEmptyDays}
         initialDate={new Date(2025, 9, 21)}
         startOfWeek={startOfWeek}
         leftHeader={<div>Left</div>}
-        rightHeader={<button style={{ padding: "6px 10px" }}>Right</button>}
+        rightHeader={<div>Right</div>}
         onDateClick={handleDateClick}
         renderDayContent={(date: Date) => {
           const winEmpty: undefined | ((d: Date) => JSX.Element) = (globalThis as any)?.weeklineEmpty;
@@ -142,7 +144,7 @@ function App(): JSX.Element {
             return t.getFullYear() === y && t.getMonth() === m && t.getDate() === d;
           });
 
-          if (items.length === 0) return renderEmpty(date);
+          if (items.length === 0) return (showEmptyDays ? renderEmpty(date) : null);
           return (
             <div style={{ display: "grid", gap: 8 }}>
               {items.map((it) => (
@@ -157,3 +159,7 @@ function App(): JSX.Element {
 }
 
 export default App;
+
+
+
+
