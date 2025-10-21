@@ -20,6 +20,7 @@ export default defineConfig({
       entry: {
         index: "src/index.ts",
         WeekCalendar: "src/WeekCalendar.ts",
+        WeekCalenderEmpty: "src/WeekCalenderEmpty.ts",
       },
       name: "ReactWeekline",
       formats: ["es", "cjs"],
