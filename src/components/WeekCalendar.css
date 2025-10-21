@@ -4,8 +4,8 @@
   --wk-muted: #6b7280;
   --wk-sun: #e53935; /* red */
   --wk-sat: #1e88e5; /* blue */
-  --wk-today-bg: #f0f7ff;
-  --wk-today-text: #1565c0;
+  --wk-today-text: #2b2f38;
+  --wk-today-bg: #e4e4e7;
 
   display: flex;
   flex-direction: column;
@@ -95,7 +95,6 @@
 .wk-weekbar-date.wk-today {
   background: var(--wk-today-bg);
   color: var(--wk-today-text);
-  border: 1px solid #d7e8ff;
 }
 
 .wk-weeklist {
