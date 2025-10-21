@@ -1,6 +1,8 @@
-﻿react-weekline
+﻿## react-weekline
 
 Lightweight, flexible weekly calendar component for React. Renders a 7‑day list view with headers, day labels, and per‑day custom content.
+
+<img width="459" height="644" alt="스크린샷 2025-10-21 145905" src="https://github.com/user-attachments/assets/1f592262-46a5-41d5-ba55-79c3645860c0" />
 
 Features
 - Weekly list layout with day header + content region per day
