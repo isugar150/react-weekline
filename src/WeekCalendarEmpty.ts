@@ -1,1 +1,0 @@
-﻿export { customEmpty } from "./WeekCalenderEmpty";
