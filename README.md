@@ -5,39 +5,41 @@
 [![Built with React](https://img.shields.io/badge/built%20with-React-61DAFB.svg?style=flat-square&logo=react&logoColor=white)]()
 [![TypeScript](https://img.shields.io/badge/typescript-007ACC?style=flat-square&logo=typescript&logoColor=white)]()
 
-Lightweight, flexible weekly calendar component for React. Renders a 7‑day list view with headers, day labels, and per‑day custom content.
+
+**React용 가볍고 유연한 주간 캘린더 컴포넌트.**  
+요일 헤더와 일자별 콘텐츠 영역이 포함된 7일 리스트 뷰를 렌더링합니다.
 
 <img width="459" height="644" alt="스크린샷 2025-10-21 145905" src="https://github.com/user-attachments/assets/1f592262-46a5-41d5-ba55-79c3645860c0" />
 
-Features
-- Weekly list layout with day header + content region per day
-- Custom renderer per day via `renderDayContent(date)`
-- Navigation between weeks (prev/next)
-- Configurable start of week: Sunday or Monday
-- Optional hiding of empty days via `showEmptyDays`
-- Minimal CSS, easy to theme
+## ✨ 주요 특징
 
-Installation
+- 요일 헤더 + 일자 콘텐츠 영역으로 구성된 주간 리스트 레이아웃  
+- `renderDayContent(date)`를 통한 일자별 커스텀 렌더러 지원  
+- 이전/다음 주로 이동 가능  
+- 주 시작 요일 설정 가능 (일요일 or 월요일)  
+- 비어 있는 날짜 숨김 옵션 (`showEmptyDays`)  
+- 최소한의 CSS로 쉽게 테마 변경 가능  
+
+## 📦 설치
 - npm: `npm i react-weekline`
 - pnpm: `pnpm add react-weekline`
 - yarn: `yarn add react-weekline`
 
-Peer Dependencies
+🔗 Peer Dependencies
 - `react`: ^18 || ^19
 - `react-dom`: ^18 || ^19
 
-Minimum Requirements
-- Node.js 18+ (Vite 7 and modern bundlers require Node 18+)
-- A modern bundler that supports ESM (Vite, Webpack 5, Rspack, etc.)
-- TypeScript optional but recommended (library ships with types)
+🧩 최소 요구사항
+- Node.js 18 이상 (Vite 7 등 최신 번들러 필요)
+- ESM을 지원하는 최신 번들러 (Vite, Webpack 5, Rspack 등)
+- TypeScript는 선택사항 (타입 정의 포함됨)
 
-Styling
-- Import the packaged stylesheet once in your app entry:
+🎨 스타일 적용
+- 앱 진입점에서 한 번만 CSS 임포트:
   - `import 'react-weekline/style.css'`
-- You can override classes in your app’s CSS if you need custom theming.
+- 필요 시 CSS 클래스명을 오버라이드하여 테마 커스터마이징 가능.
 
-Quick Start
-
+🚀 빠른 시작 예제
 ```tsx
 import { useMemo } from 'react';
 import { WeekCalendar, type WeekStart } from 'react-weekline';
@@ -88,32 +90,31 @@ export default function Example() {
 }
 ```
 
-API
+⚙️ API
 
 - `WeekCalendar` props:
   - `leftHeader?: ReactNode`
-    - Custom element on the left side of the header bar.
+    - 헤더 왼쪽 영역의 커스텀 엘리먼트
   - `rightHeader?: ReactNode`
-    - Custom element on the right side of the header bar.
+    - 헤더 오른쪽 영역의 커스텀 엘리먼트
   - `initialDate?: Date`
-    - Anchor date for the initial week. Defaults to “today”.
+    - 초기 주(anchor date), 기본값은 오늘
   - `renderDayContent?: (date: Date) => React.ReactNode`
-    - Called for each day of the current week. Return your custom content.
-    - Return `null` or `undefined` to indicate an empty day.
+    - 각 날짜별 렌더링 콜백, null/undefined면 비어 있는 날짜로 처리
   - `startOfWeek?: 'sun' | 'mon'` (default: `'sun'`)
-    - Controls whether weeks start on Sunday or Monday.
+    - 주 시작 요일 (기본값 'sun')
   - `onWeekChange?: (start: Date, end: Date) => void`
-    - Notified whenever the visible week range changes.
+    - 주간 변경 시 호출됨
   - `onDateClick?: (date: Date) => void`
-    - Called when the user clicks a date in the calendar.
+    - 날짜 클릭 시 호출됨
   - `showEmptyDays?: boolean` (default: `true`)
-    - When `false`, days where `renderDayContent` returns `null`/`undefined` are not rendered in the list.
+    - false면 renderDayContent가 비어 있는 날짜는 렌더링하지 않음 (기본값 true)
 
-Empty-State and Empty Days
-- You fully control empty-state UI by what you return from `renderDayContent`.
-  - Return `null` or `undefined` to mark a day as empty.
-  - With `showEmptyDays={true}` (default), the day renders and you can show your own placeholder.
-  - With `showEmptyDays={false}`, the day row is hidden entirely when `renderDayContent` is empty.
+🪶 비어 있는 상태(Empty State) 처리
+- `renderDayContent`에서 반환값으로 직접 제어 가능
+  - `null` 또는 `undefined` → 비어 있는 날로 간주
+  - `showEmptyDays={true}` → 자리만 표시됨 (플레이스홀더 표시 가능)
+  - `showEmptyDays={false}` → 해당 날짜 행 자체를 숨김
 
 Data Binding Example (from JSON)
 
@@ -148,21 +149,23 @@ const renderDayContent = (date: Date) => {
 };
 ```
 
-TypeScript
-- The package includes type definitions.
-- If you import JSON directly (like `import data from './data.json'`), ensure your tooling supports JSON imports.
-  - In Vite projects this works out of the box.
-  - If you need ambient JSON typing in strict TS setups, you can add a `*.d.ts` with:
+🧠 TypeScript
+- 타입 정의 파일 포함되어 있음
+- JSON 직접 import 시, 프로젝트가 이를 지원해야 함
+  - Vite에서는 기본적으로 지원됨
+  - 엄격한 TS 설정에서는 아래 선언이 필요할 수 있음:
     - `declare module '*.json' { const value: any; export default value; }`
 
-SSR
-- The component is UI‑only and does not use browser‑only globals during render. It should work with common SSR setups that support React 18/19.
+🌐 SSR 지원  
+-- 브라우저 전용 전역 객체를 사용하지 않음  
+-- React 18/19 기반의 SSR 환경에서 정상 동작 가능  
 
-Local Development (for contributors)
-- Install deps: `npm i`
-- Start dev: `npm run dev`
-- Build: `npm run build`
-- Lint: `npm run lint`
+🧑‍💻 로컬 개발 (기여자용)
+- 종속성 설치: `npm i`
+- 개발 시작: `npm run dev`
+- 빌드: `npm run build`
+- 유효성 검사: `npm run lint`
 
-Notes
-- This library focuses on layout and navigation. Data fetching, filtering, and empty‑state presentation are left to the consumer via `renderDayContent`.
+📌 참고
+- 이 라이브러리는 레이아웃 및 네비게이션에 집중
+- 데이터 로딩, 필터링, 빈 상태 표현 등은 모두 사용자가 `renderDayContent로` 제어
