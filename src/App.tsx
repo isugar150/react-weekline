@@ -2,7 +2,7 @@
 import "./App.css";
 import WeekCalendar from "./components/WeekCalendar";
 import sampleData from "./assets/data.json";
-import { customEmpty as customEmptyRenderer } from "./empty";
+import { customEmpty as customEmptyRenderer } from "./WeekCalenderEmpty";
 
 interface EventItem {
   id: string | number;
@@ -19,18 +19,42 @@ function parseLocalDateTime(text: string): Date {
   const [datePart, timePart = "00:00:00"] = text.split(" ");
   const [y, m, d] = datePart.split("-").map((n) => parseInt(n, 10));
   const [hh, mm, ss = "0"] = timePart.split(":");
-  return new Date(y, (m || 1) - 1, d || 1, parseInt(hh || "0", 10), parseInt(mm || "0", 10), parseInt(ss || "0", 10));
+  return new Date(
+    y,
+    (m || 1) - 1,
+    d || 1,
+    parseInt(hh || "0", 10),
+    parseInt(mm || "0", 10),
+    parseInt(ss || "0", 10),
+  );
 }
 
 function EmptyState(): JSX.Element {
   return (
-    <div style={{ display: "grid", placeItems: "center", padding: 16, color: "#6b7280", border: "1px dashed #e6e8ef", borderRadius: 8 }}>
-      <div style={{ display: "grid", placeItems: "center", gap: 8 }}>No content</div>
+    <div
+      style={{
+        display: "grid",
+        placeItems: "center",
+        padding: 16,
+        color: "#6b7280",
+        border: "1px dashed #e6e8ef",
+        borderRadius: 8,
+      }}
+    >
+      <div style={{ display: "grid", placeItems: "center", gap: 8 }}>
+        No content
+      </div>
     </div>
   );
 }
 
-function EventItemView({ item, onClick }: { item: EventItem; onClick: (it: EventItem) => void }): JSX.Element {
+function EventItemView({
+  item,
+  onClick,
+}: {
+  item: EventItem;
+  onClick: (it: EventItem) => void;
+}): JSX.Element {
   return (
     <button
       type="button"
@@ -48,7 +72,15 @@ function EventItemView({ item, onClick }: { item: EventItem; onClick: (it: Event
         cursor: "pointer",
       }}
     >
-      <span aria-hidden style={{ width: 6, alignSelf: "stretch", borderRadius: 4, background: item.labelColor }} />
+      <span
+        aria-hidden
+        style={{
+          width: 6,
+          alignSelf: "stretch",
+          borderRadius: 4,
+          background: item.labelColor,
+        }}
+      />
 
       <img
         src={item.photo}
@@ -63,9 +95,28 @@ function EventItemView({ item, onClick }: { item: EventItem; onClick: (it: Event
         }}
       />
 
-      <div style={{ display: "flex", flexDirection: "column", gap: 6, minWidth: 0, flex: 1 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
-          <span style={{ fontSize: 14, color: "#111827", fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 6,
+          minWidth: 0,
+          flex: 1,
+        }}
+      >
+        <div
+          style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}
+        >
+          <span
+            style={{
+              fontSize: 14,
+              color: "#111827",
+              fontWeight: 600,
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
             {item.title}
           </span>
           <span
@@ -99,7 +150,17 @@ function EventItemView({ item, onClick }: { item: EventItem; onClick: (it: Event
           ))}
         </div>
 
-        <div style={{ fontSize: 12, color: "#4b5563", lineHeight: 1.4, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+        <div
+          style={{
+            fontSize: 12,
+            color: "#4b5563",
+            lineHeight: 1.4,
+            display: "-webkit-box",
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+          }}
+        >
           {item.content}
         </div>
       </div>
@@ -133,22 +194,35 @@ function App(): JSX.Element {
         rightHeader={<div>Right</div>}
         onDateClick={handleDateClick}
         renderDayContent={(date: Date) => {
-          const winEmpty: undefined | ((d: Date) => JSX.Element) = (globalThis as any)?.weeklineEmpty;
-          const renderEmpty = (customEmptyRenderer ?? winEmpty ?? (() => <EmptyState />)) as (d: Date) => JSX.Element;
+          const winEmpty = (
+            globalThis as unknown as {
+              weeklineEmpty?: (d: Date) => JSX.Element;
+            }
+          )?.weeklineEmpty;
+          const renderEmpty = (customEmptyRenderer ??
+            winEmpty ??
+            (() => <EmptyState />)) as (d: Date) => JSX.Element;
           const y = date.getFullYear();
           const m = date.getMonth();
           const d = date.getDate();
 
           const items: EventItem[] = data.filter((it) => {
             const t = parseLocalDateTime(it.time);
-            return t.getFullYear() === y && t.getMonth() === m && t.getDate() === d;
+            return (
+              t.getFullYear() === y && t.getMonth() === m && t.getDate() === d
+            );
           });
 
-          if (items.length === 0) return (showEmptyDays ? renderEmpty(date) : null);
+          if (items.length === 0)
+            return showEmptyDays ? renderEmpty(date) : null;
           return (
             <div style={{ display: "grid", gap: 8 }}>
               {items.map((it) => (
-                <EventItemView key={it.id} item={it} onClick={(e) => handleEventClick(e, date)} />
+                <EventItemView
+                  key={it.id}
+                  item={it}
+                  onClick={(e) => handleEventClick(e, date)}
+                />
               ))}
             </div>
           );
@@ -159,7 +233,3 @@ function App(): JSX.Element {
 }
 
 export default App;
-
-
-
-
