@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "react-weekline",
   "version": "0.1.4",
   "private": false,
@@ -28,7 +28,14 @@
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
-    "./style.css": "./dist/react-weekline.css"
+    "./style.css": "./dist/react-weekline.css",
+    "./WeekCalendar": {
+      "types": "./dist/WeekCalendar.d.ts",
+      "import": "./dist/WeekCalendar.js",
+      "require": "./dist/WeekCalendar.cjs"
+    },
+    "./WeekCalendar.css": "./dist/react-weekline.css",
+    "./WeekCalendar/style.css": "./dist/react-weekline.css"
   },
   "publishConfig": {
     "access": "public"

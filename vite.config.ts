@@ -16,10 +16,14 @@ export default defineConfig({
   ],
   build: {
     lib: {
-      entry: "src/index.ts",
+      // Build multiple entry points to expose secondary import paths
+      entry: {
+        index: "src/index.ts",
+        WeekCalendar: "src/WeekCalendar.ts",
+      },
       name: "ReactWeekline",
       formats: ["es", "cjs"],
-      fileName: (format) => (format === "es" ? "index.js" : "index.cjs"),
+      // Let Vite/Rollup use default file naming per entry
     },
     rollupOptions: {
       external: ["react", "react-dom"],
