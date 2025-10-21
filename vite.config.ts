@@ -1,4 +1,4 @@
-﻿import { defineConfig } from "vite";
+import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import dts from "vite-plugin-dts";
 
@@ -20,6 +20,7 @@ export default defineConfig({
       entry: {
         index: "src/index.ts",
         WeekCalendar: "src/WeekCalendar.ts",
+        WeekCalenderEmpty: "src/WeekCalenderEmpty.tsx",
       },
       name: "ReactWeekline",
       formats: ["es", "cjs"],

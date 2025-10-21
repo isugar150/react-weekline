@@ -35,7 +35,12 @@
       "require": "./dist/WeekCalendar.cjs"
     },
     "./WeekCalendar.css": "./dist/react-weekline.css",
-    "./WeekCalendar/style.css": "./dist/react-weekline.css"
+    "./WeekCalendar/style.css": "./dist/react-weekline.css",
+    "./WeekCalenderEmpty": {
+      "types": "./dist/WeekCalenderEmpty.d.ts",
+      "import": "./dist/WeekCalenderEmpty.js",
+      "require": "./dist/WeekCalenderEmpty.cjs"
+    }
   },
   "publishConfig": {
     "access": "public"
@@ -55,7 +60,7 @@
     "vite": "^7.1.7",
     "vite-plugin-dts": "^4.3.0"
   },
-  "description": "react용 주간 캘린더",
+  "description": "React weekly calendar",
   "dependencies": {
     "acorn": "^8.15.0",
     "acorn-jsx": "^5.3.2",
