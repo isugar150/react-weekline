@@ -187,6 +187,7 @@ function App(): JSX.Element {
   return (
     <div style={{ maxWidth: 860, margin: "24px auto", padding: "0 16px" }}>
       <WeekCalendar
+        emptyWeekData={<div>There is no schedule.</div>}
         showEmptyDays={showEmptyDays}
         initialDate={new Date(2025, 9, 21)}
         startOfWeek={startOfWeek}

@@ -1,7 +1,7 @@
-﻿import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import './WeekCalendar.css';
+﻿import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import "./WeekCalendar.css";
 
-export type WeekStart = 'sun' | 'mon';
+export type WeekStart = "sun" | "mon";
 
 export type WeekCalendarProps = {
   leftHeader?: ReactNode;
@@ -12,16 +12,17 @@ export type WeekCalendarProps = {
   onWeekChange?: (start: Date, end: Date) => void;
   onDateClick?: (date: Date) => void;
   showEmptyDays?: boolean; // when false, hide rows where renderDayContent returns null/undefined
+  emptyWeekData?: ReactNode; // shown when all days are empty for the week
 };
 
 // Helpers
-const KOREAN_DAYS_SUN_FIRST = ['일', '월', '화', '수', '목', '금', '토'];
-const KOREAN_DAYS_MON_FIRST = ['월', '화', '수', '목', '금', '토', '일'];
+const KOREAN_DAYS_SUN_FIRST = ["일", "월", "화", "수", "목", "금", "토"];
+const KOREAN_DAYS_MON_FIRST = ["월", "화", "수", "목", "금", "토", "일"];
 
 function getWeekStart(date: Date, start: WeekStart): Date {
   const d = new Date(date);
   const day = d.getDay(); // 0 (Sun) .. 6 (Sat)
-  const diff = start === 'mon' ? (day + 6) % 7 : day; // mon: Sun->6, Mon->0; sun: Sun->0
+  const diff = start === "mon" ? (day + 6) % 7 : day; // mon: Sun->6, Mon->0; sun: Sun->0
   d.setDate(d.getDate() - diff);
   d.setHours(0, 0, 0, 0);
   return d;
@@ -42,29 +43,60 @@ function isSameDay(a: Date, b: Date): boolean {
 }
 
 function pad(n: number): string {
-  return n.toString().padStart(2, '0');
+  return n.toString().padStart(2, "0");
 }
 
 function formatYearMonth(date: Date): string {
-  return date.getFullYear() + '.' + pad(date.getMonth() + 1);
+  return date.getFullYear() + "." + pad(date.getMonth() + 1);
 }
 
 function formatFull(date: Date): string {
-  const yoil = ['일', '월', '화', '수', '목', '금', '토'][date.getDay()];
+  const yoil = ["일", "월", "화", "수", "목", "금", "토"][date.getDay()];
   return (
-    date.getFullYear() + '.' + pad(date.getMonth() + 1) + '.' + pad(date.getDate()) + ' (' + yoil + ')'
+    date.getFullYear() +
+    "." +
+    pad(date.getMonth() + 1) +
+    "." +
+    pad(date.getDate()) +
+    " (" +
+    yoil +
+    ")"
   );
 }
 
 const ChevronLeft = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M15 18L9 12L15 6"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
   </svg>
 );
 
 const ChevronRight = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M9 18L15 12L9 6"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
   </svg>
 );
 
@@ -73,20 +105,30 @@ export default function WeekCalendar({
   rightHeader,
   initialDate,
   renderDayContent,
-  startOfWeek = 'sun',
+  startOfWeek = "sun",
   onWeekChange,
   onDateClick,
   showEmptyDays = true,
+  emptyWeekData,
 }: WeekCalendarProps) {
   const today = useMemo(() => new Date(), []);
-  const [anchorDate, setAnchorDate] = useState<Date>(initialDate ? new Date(initialDate) : today);
+  const [anchorDate, setAnchorDate] = useState<Date>(
+    initialDate ? new Date(initialDate) : today,
+  );
 
-  const weekStart = useMemo(() => getWeekStart(anchorDate, startOfWeek), [anchorDate, startOfWeek]);
-  const weekDays = useMemo(() => Array.from({ length: 7 }, (_, i) => addDays(weekStart, i)), [weekStart]);
+  const weekStart = useMemo(
+    () => getWeekStart(anchorDate, startOfWeek),
+    [anchorDate, startOfWeek],
+  );
+  const weekDays = useMemo(
+    () => Array.from({ length: 7 }, (_, i) => addDays(weekStart, i)),
+    [weekStart],
+  );
 
-  const labels = startOfWeek === 'mon' ? KOREAN_DAYS_MON_FIRST : KOREAN_DAYS_SUN_FIRST;
-  const sundayIndex = startOfWeek === 'sun' ? 0 : 6;
-  const saturdayIndex = startOfWeek === 'sun' ? 6 : 5;
+  const labels =
+    startOfWeek === "mon" ? KOREAN_DAYS_MON_FIRST : KOREAN_DAYS_SUN_FIRST;
+  const sundayIndex = startOfWeek === "sun" ? 0 : 6;
+  const saturdayIndex = startOfWeek === "sun" ? 6 : 5;
 
   // Choose display month using the middle day of the week to avoid week-spanning ambiguity
   const midOfWeek = weekDays[3];
@@ -96,7 +138,9 @@ export default function WeekCalendar({
   const weekEnd = useMemo(() => addDays(weekStart, 6), [weekStart]);
 
   const onWeekChangeRef = useRef(onWeekChange);
-  useEffect(() => { onWeekChangeRef.current = onWeekChange; }, [onWeekChange]);
+  useEffect(() => {
+    onWeekChangeRef.current = onWeekChange;
+  }, [onWeekChange]);
 
   // notify week change once range changes
   useEffect(() => {
@@ -126,16 +170,17 @@ export default function WeekCalendar({
         {labels.map((label, idx) => {
           const isSun = idx === sundayIndex;
           const isSat = idx === saturdayIndex;
-          const classes = 'wk-weekbar-col ' + (isSat ? 'wk-sat' : isSun ? 'wk-sun' : '');
+          const classes =
+            "wk-weekbar-col " + (isSat ? "wk-sat" : isSun ? "wk-sun" : "");
           const dateClasses =
-            'wk-weekbar-date ' +
-            (isSameDay(weekDays[idx], today) ? 'wk-today ' : '') +
-            (isSat ? 'wk-sat' : isSun ? ' wk-sun' : '');
+            "wk-weekbar-date " +
+            (isSameDay(weekDays[idx], today) ? "wk-today " : "") +
+            (isSat ? "wk-sat" : isSun ? " wk-sun" : "");
           return (
             <div key={label} className={classes}>
               <div className="wk-weekbar-label">{label}</div>
               <div
-                className={dateClasses + (onDateClick ? ' wk-clickable' : '')}
+                className={dateClasses + (onDateClick ? " wk-clickable" : "")}
                 onClick={() => onDateClick?.(weekDays[idx])}
                 role="button"
                 tabIndex={0}
@@ -149,21 +194,49 @@ export default function WeekCalendar({
       </div>
 
       <div className="wk-weeklist">
-        {weekDays.map((d) => {
-          const content = renderDayContent ? renderDayContent(d) : <div>렌더링할 html 코드</div>;
-          if (!showEmptyDays && renderDayContent && (content === null || content === undefined)) {
-            return null;
+        {(() => {
+          const items = weekDays.map((d) => ({
+            date: d,
+            content: renderDayContent ? (
+              renderDayContent(d)
+            ) : (
+              <div>렌더링할 html 코드</div>
+            ),
+          }));
+
+          // Determine if the entire week has no content (only applies when renderDayContent is provided)
+          const isAllEmpty =
+            !!renderDayContent &&
+            items.every(
+              (it) => it.content === null || it.content === undefined,
+            );
+
+          if (isAllEmpty && emptyWeekData) {
+            return <div className="wk-weeklist-empty">{emptyWeekData}</div>;
           }
-          return (
-            <div key={d.toISOString()} className="wk-weeklist-row">
-              <div className="wk-weeklist-date-row" onClick={() => onDateClick?.(d)}>
-                <div className="wk-weeklist-date-text">{formatFull(d)}</div>
-                <div className="wk-divider" aria-hidden="true"></div>
+
+          return items.map(({ date: d, content }) => {
+            if (
+              !showEmptyDays &&
+              renderDayContent &&
+              (content === null || content === undefined)
+            ) {
+              return null;
+            }
+            return (
+              <div key={d.toISOString()} className="wk-weeklist-row">
+                <div
+                  className="wk-weeklist-date-row"
+                  onClick={() => onDateClick?.(d)}
+                >
+                  <div className="wk-weeklist-date-text">{formatFull(d)}</div>
+                  <div className="wk-divider" aria-hidden="true"></div>
+                </div>
+                <div className="wk-weeklist-content">{content ?? null}</div>
               </div>
-              <div className="wk-weeklist-content">{content ?? null}</div>
-            </div>
-          );
-        })}
+            );
+          });
+        })()}
       </div>
     </div>
   );

@@ -123,6 +123,8 @@ export default function Example(): JSX.Element {
   - `null` 또는 `undefined` → 비어 있는 날로 간주
   - `showEmptyDays={true}` → 자리만 표시됨 (플레이스홀더 표시 가능)
   - `showEmptyDays={false}` → 해당 날짜 행 자체를 숨김
+  - `emptyWeekData?: ReactNode`
+    - 해당 주의 모든 날짜가 비어 있을 때 주간 전체에 대한 커스텀 빈 상태를 표시
 
 Data Binding Example (from JSON)
 
