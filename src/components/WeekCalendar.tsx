@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+﻿import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import "./WeekCalendar.css";
 
 export type WeekStart = "sun" | "mon";
@@ -138,6 +138,15 @@ export default function WeekCalendar({
     }
   };
 
+  // Sync initialDate changes in uncontrolled mode only
+  useEffect(() => {
+    if (isControlled) return;
+    if (!initialDate) return;
+    const next = new Date(initialDate);
+    if (internalAnchorDate.getTime() !== next.getTime()) {
+      setInternalAnchorDate(next);
+    }
+  }, [initialDate, isControlled, internalAnchorDate]);
   const weekStart = useMemo(
     () => getWeekStart(anchorDate, startOfWeek),
     [anchorDate, startOfWeek],
@@ -207,7 +216,7 @@ export default function WeekCalendar({
                 onClick={() => onDateClick?.(weekDays[idx])}
                 role="button"
                 tabIndex={0}
-                aria-label="날짜 선택"
+                aria-label="Select date"
               >
                 {weekDays[idx].getDate()}
               </div>
@@ -223,7 +232,7 @@ export default function WeekCalendar({
             content: renderDayContent ? (
               renderDayContent(d)
             ) : (
-              <div>�������� html �ڵ�</div>
+              <div>sample html</div>
             ),
           }));
 

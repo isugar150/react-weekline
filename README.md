@@ -1,4 +1,4 @@
-﻿# react-weekline
+# react-weekline
 
 [![npm version](https://img.shields.io/npm/v/react-weekline.svg?style=flat-square&color=blue)](https://www.npmjs.com/package/react-weekline)
 [![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg?style=flat-square)](https://opensource.org/licenses/ISC)
@@ -107,6 +107,10 @@ export default function Example(): JSX.Element {
     - 헤더 오른쪽 영역의 커스텀 엘리먼트
   - `initialDate?: Date`
     - 초기 주(anchor date), 기본값은 오늘
+  - `anchorDateProp?: Date`
+    - 직접 컨트롤하기 위한 날짜
+  - `onAnchorDateChange?: (date: Date) => {}`
+    - 날짜 props 변경 콜백
   - `renderDayContent?: (date: Date) => React.ReactNode`
     - 각 날짜별 렌더링 콜백, null/undefined면 비어 있는 날짜로 처리
   - `startOfWeek?: 'sun' | 'mon'` (default: `'sun'`)
