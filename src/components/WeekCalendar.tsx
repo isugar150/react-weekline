@@ -125,9 +125,10 @@ export default function WeekCalendar({
         : today,
   );
 
-  const anchorDate = isControlled
-    ? new Date(anchorDateProp!)
-    : internalAnchorDate;
+  const anchorDate = useMemo(
+    () => (isControlled ? new Date(anchorDateProp!) : internalAnchorDate),
+    [isControlled, anchorDateProp, internalAnchorDate],
+  );
 
   const setAnchorDateSafe = (date: Date) => {
     if (isControlled) {
