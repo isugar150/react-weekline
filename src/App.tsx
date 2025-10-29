@@ -200,7 +200,17 @@ function App(): JSX.Element {
           setAnchorDate(date);
         }}
         startOfWeek={startOfWeek}
-        leftHeader={<div>Left</div>}
+        leftHeader={
+          <div>
+            <button
+              onClick={() => {
+                setAnchorDate(new Date());
+              }}
+            >
+              오늘
+            </button>
+          </div>
+        }
         rightHeader={<div>Right</div>}
         onDateClick={handleDateClick}
         renderDayContent={(date: Date) => {
