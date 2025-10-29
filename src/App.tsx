@@ -1,4 +1,4 @@
-﻿import { useMemo, type JSX } from "react";
+﻿import { useMemo, type JSX, useState, useEffect } from "react";
 import "./App.css";
 import WeekCalendar from "./components/WeekCalendar";
 import sampleData from "./assets/data.json";
@@ -169,6 +169,7 @@ function EventItemView({
 }
 
 function App(): JSX.Element {
+  const [anchorDate, setAnchorDate] = useState(new Date());
   const startOfWeek = "sun" as const;
   const showEmptyDays = false;
 
@@ -184,12 +185,20 @@ function App(): JSX.Element {
     return (sampleData as unknown as EventItem[]).map((it) => ({ ...it }));
   }, []);
 
+  useEffect(() => {
+    console.log(anchorDate);
+  }, [anchorDate]);
+
   return (
     <div style={{ maxWidth: 860, margin: "24px auto", padding: "0 16px" }}>
       <WeekCalendar
         emptyWeekData={<div>There is no schedule.</div>}
         showEmptyDays={showEmptyDays}
-        initialDate={new Date(2025, 9, 21)}
+        // initialDate={new Date(2025, 9, 21)}
+        anchorDateProp={anchorDate}
+        onAnchorDateChange={(date) => {
+          setAnchorDate(date);
+        }}
         startOfWeek={startOfWeek}
         leftHeader={<div>Left</div>}
         rightHeader={<div>Right</div>}

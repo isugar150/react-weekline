@@ -1,4 +1,4 @@
-﻿import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import "./WeekCalendar.css";
 
 export type WeekStart = "sun" | "mon";
@@ -13,6 +13,8 @@ export type WeekCalendarProps = {
   onDateClick?: (date: Date) => void;
   showEmptyDays?: boolean; // when false, hide rows where renderDayContent returns null/undefined
   emptyWeekData?: ReactNode; // shown when all days are empty for the week
+  anchorDateProp?: Date;
+  onAnchorDateChange?: (date: Date) => void;
 };
 
 // Helpers
@@ -110,16 +112,36 @@ export default function WeekCalendar({
   onDateClick,
   showEmptyDays = true,
   emptyWeekData,
+  anchorDateProp,
+  onAnchorDateChange,
 }: WeekCalendarProps) {
   const today = useMemo(() => new Date(), []);
-  const [anchorDate, setAnchorDate] = useState<Date>(
-    initialDate ? new Date(initialDate) : today,
+  const isControlled = anchorDateProp !== undefined;
+  const [internalAnchorDate, setInternalAnchorDate] = useState<Date>(
+    anchorDateProp
+      ? new Date(anchorDateProp)
+      : initialDate
+        ? new Date(initialDate)
+        : today,
   );
+
+  const anchorDate = isControlled
+    ? new Date(anchorDateProp!)
+    : internalAnchorDate;
+
+  const setAnchorDateSafe = (date: Date) => {
+    if (isControlled) {
+      onAnchorDateChange?.(date);
+    } else {
+      setInternalAnchorDate(date);
+    }
+  };
 
   const weekStart = useMemo(
     () => getWeekStart(anchorDate, startOfWeek),
     [anchorDate, startOfWeek],
   );
+
   const weekDays = useMemo(
     () => Array.from({ length: 7 }, (_, i) => addDays(weekStart, i)),
     [weekStart],
@@ -147,8 +169,8 @@ export default function WeekCalendar({
     onWeekChangeRef.current?.(weekStart, weekEnd);
   }, [weekStart, weekEnd]);
 
-  const onPrev = () => setAnchorDate(addDays(anchorDate, -7));
-  const onNext = () => setAnchorDate(addDays(anchorDate, 7));
+  const onPrev = () => setAnchorDateSafe(addDays(anchorDate, -7));
+  const onNext = () => setAnchorDateSafe(addDays(anchorDate, 7));
 
   return (
     <div className="wk-wrapper">
@@ -200,7 +222,7 @@ export default function WeekCalendar({
             content: renderDayContent ? (
               renderDayContent(d)
             ) : (
-              <div>렌더링할 html 코드</div>
+              <div>�������� html �ڵ�</div>
             ),
           }));
 
