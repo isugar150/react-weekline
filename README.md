@@ -121,6 +121,8 @@ export default function Example(): JSX.Element {
     - 날짜 클릭 시 호출됨
   - `showEmptyDays?: boolean` (default: `true`)
     - false면 renderDayContent가 비어 있는 날짜는 렌더링하지 않음 (기본값 true)
+  - `scrollToDateOnClick?: boolean` (default: `true`)
+    - 날짜 클릭시 해당 날짜로 스크롤
 
 🪶 비어 있는 상태(Empty State) 처리
 - `renderDayContent`에서 반환값으로 직접 제어 가능

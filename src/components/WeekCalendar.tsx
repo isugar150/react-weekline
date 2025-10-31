@@ -102,7 +102,7 @@ export default function WeekCalendar({
   emptyWeekData,
   anchorDateProp,
   onAnchorDateChange,
-  scrollToDateOnClick = false,
+  scrollToDateOnClick = true,
 }: WeekCalendarProps) {
   const today = useMemo(() => new Date(), []);
   const isControlled = anchorDateProp !== undefined;
