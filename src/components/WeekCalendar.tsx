@@ -6,25 +6,25 @@ export type WeekStart = "sun" | "mon";
 export type WeekCalendarProps = {
   leftHeader?: ReactNode;
   rightHeader?: ReactNode;
-  initialDate?: Date; // anchor date for the week
+  initialDate?: Date;
   renderDayContent?: (date: Date) => ReactNode;
-  startOfWeek?: WeekStart; // 'sun' | 'mon' (default: 'sun')
+  startOfWeek?: WeekStart;
   onWeekChange?: (start: Date, end: Date) => void;
   onDateClick?: (date: Date) => void;
-  showEmptyDays?: boolean; // when false, hide rows where renderDayContent returns null/undefined
-  emptyWeekData?: ReactNode; // shown when all days are empty for the week
+  showEmptyDays?: boolean;
+  emptyWeekData?: ReactNode;
   anchorDateProp?: Date;
   onAnchorDateChange?: (date: Date) => void;
+  scrollToDateOnClick?: boolean; // 날짜 클릭 시 스크롤 여부
 };
 
-// Helpers
 const KOREAN_DAYS_SUN_FIRST = ["일", "월", "화", "수", "목", "금", "토"];
 const KOREAN_DAYS_MON_FIRST = ["월", "화", "수", "목", "금", "토", "일"];
 
 function getWeekStart(date: Date, start: WeekStart): Date {
   const d = new Date(date);
-  const day = d.getDay(); // 0 (Sun) .. 6 (Sat)
-  const diff = start === "mon" ? (day + 6) % 7 : day; // mon: Sun->6, Mon->0; sun: Sun->0
+  const day = d.getDay();
+  const diff = start === "mon" ? (day + 6) % 7 : day;
   d.setDate(d.getDate() - diff);
   d.setHours(0, 0, 0, 0);
   return d;
@@ -67,13 +67,7 @@ function formatFull(date: Date): string {
 }
 
 const ChevronLeft = () => (
-  <svg
-    width="20"
-    height="20"
-    viewBox="0 0 24 24"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
     <path
       d="M15 18L9 12L15 6"
       stroke="currentColor"
@@ -85,13 +79,7 @@ const ChevronLeft = () => (
 );
 
 const ChevronRight = () => (
-  <svg
-    width="20"
-    height="20"
-    viewBox="0 0 24 24"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
     <path
       d="M9 18L15 12L9 6"
       stroke="currentColor"
@@ -114,6 +102,7 @@ export default function WeekCalendar({
   emptyWeekData,
   anchorDateProp,
   onAnchorDateChange,
+  scrollToDateOnClick = false,
 }: WeekCalendarProps) {
   const today = useMemo(() => new Date(), []);
   const isControlled = anchorDateProp !== undefined;
@@ -138,7 +127,6 @@ export default function WeekCalendar({
     }
   };
 
-  // Sync initialDate changes in uncontrolled mode only
   useEffect(() => {
     if (isControlled) return;
     if (!initialDate) return;
@@ -147,6 +135,7 @@ export default function WeekCalendar({
       setInternalAnchorDate(next);
     }
   }, [initialDate, isControlled, internalAnchorDate]);
+
   const weekStart = useMemo(
     () => getWeekStart(anchorDate, startOfWeek),
     [anchorDate, startOfWeek],
@@ -162,11 +151,8 @@ export default function WeekCalendar({
   const sundayIndex = startOfWeek === "sun" ? 0 : 6;
   const saturdayIndex = startOfWeek === "sun" ? 6 : 5;
 
-  // Choose display month using the middle day of the week to avoid week-spanning ambiguity
   const midOfWeek = weekDays[3];
   const ym = formatYearMonth(midOfWeek);
-
-  // precompute weekEnd to keep effect deps simple
   const weekEnd = useMemo(() => addDays(weekStart, 6), [weekStart]);
 
   const onWeekChangeRef = useRef(onWeekChange);
@@ -174,10 +160,42 @@ export default function WeekCalendar({
     onWeekChangeRef.current = onWeekChange;
   }, [onWeekChange]);
 
-  // notify week change once range changes
   useEffect(() => {
     onWeekChangeRef.current?.(weekStart, weekEnd);
   }, [weekStart, weekEnd]);
+
+  // 날짜별 row ref 저장
+  const dateRowRefs = useRef<Map<string, HTMLDivElement>>(new Map());
+
+  const scrollToDate = (date: Date) => {
+    const key = date.toISOString();
+    const el = dateRowRefs.current.get(key);
+
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    } else {
+      // 해당 날짜가 없으면 가장 가까운 날짜로 스크롤
+      const dates = Array.from(dateRowRefs.current.keys())
+        .map((k) => new Date(k))
+        .sort(
+          (a, b) =>
+            Math.abs(a.getTime() - date.getTime()) -
+            Math.abs(b.getTime() - date.getTime()),
+        );
+
+      if (dates.length > 0) {
+        const closest = dateRowRefs.current.get(dates[0].toISOString());
+        closest?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+  };
+
+  const handleDateClickInternal = (date: Date) => {
+    onDateClick?.(date);
+    if (scrollToDateOnClick) {
+      scrollToDate(date);
+    }
+  };
 
   const onPrev = () => setAnchorDateSafe(addDays(anchorDate, -7));
   const onNext = () => setAnchorDateSafe(addDays(anchorDate, 7));
@@ -213,7 +231,7 @@ export default function WeekCalendar({
               <div className="wk-weekbar-label">{label}</div>
               <div
                 className={dateClasses + (onDateClick ? " wk-clickable" : "")}
-                onClick={() => onDateClick?.(weekDays[idx])}
+                onClick={() => handleDateClickInternal(weekDays[idx])}
                 role="button"
                 tabIndex={0}
                 aria-label="Select date"
@@ -236,7 +254,6 @@ export default function WeekCalendar({
             ),
           }));
 
-          // Determine if the entire week has no content (only applies when renderDayContent is provided)
           const isAllEmpty =
             !!renderDayContent &&
             items.every(
@@ -256,10 +273,20 @@ export default function WeekCalendar({
               return null;
             }
             return (
-              <div key={d.toISOString()} className="wk-weeklist-row">
+              <div
+                key={d.toISOString()}
+                className="wk-weeklist-row"
+                ref={(el) => {
+                  if (el) {
+                    dateRowRefs.current.set(d.toISOString(), el);
+                  } else {
+                    dateRowRefs.current.delete(d.toISOString());
+                  }
+                }}
+              >
                 <div
                   className="wk-weeklist-date-row"
-                  onClick={() => onDateClick?.(d)}
+                  onClick={() => handleDateClickInternal(d)}
                 >
                   <div className="wk-weeklist-date-text">{formatFull(d)}</div>
                   <div className="wk-divider" aria-hidden="true"></div>

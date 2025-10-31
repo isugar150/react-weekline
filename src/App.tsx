@@ -171,7 +171,7 @@ function EventItemView({
 function App(): JSX.Element {
   const [anchorDate, setAnchorDate] = useState(new Date());
   const startOfWeek = "sun" as const;
-  const showEmptyDays = false;
+  const showEmptyDays = true;
 
   const handleEventClick = (it: EventItem, date: Date) => {
     console.log("event click:", it, date.toISOString());
@@ -213,6 +213,7 @@ function App(): JSX.Element {
         }
         rightHeader={<div>Right</div>}
         onDateClick={handleDateClick}
+        scrollToDateOnClick={true}
         renderDayContent={(date: Date) => {
           const winEmpty = (
             globalThis as unknown as {
