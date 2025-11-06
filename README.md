@@ -271,6 +271,26 @@ const renderDayContent = (date: Date) => {
 /* 주말 색상 커스텀 */
 .wk-weekbar-label.wk-sun, .wk-weekbar-date.wk-sun { color: #ef4444; }
 .wk-weekbar-label.wk-sat, .wk-weekbar-date.wk-sat { color: #3b82f6; }
+
+/* 다크모드 헤더 커스텀 */
+.chakra-theme.dark .wk-wrapper{
+  --wk-border: #374151; /* gray-700 */
+  --wk-text: #e5e7eb;   /* gray-200 */
+  --wk-muted: #9ca3af;  /* gray-400 */
+  --wk-sun: #f87171;    /* red-400 */
+  --wk-sat: #60a5fa;    /* blue-400 */
+  --wk-today-text: #e5e7eb;
+  --wk-today-bg: #374151;
+}
+.chakra-theme.dark .wk-nav-btn{
+  background: #1f2937;   /* gray-800 */
+  color: #e5e7eb;        /* gray-200 */
+  border-color: #4b5563; /* gray-600 */
+}
+.chakra-theme.dark .wk-nav-btn:hover{
+  background: #374151;   /* gray-700 */
+}
+
 ```
 
 ### CSS 파일 위치 안내
